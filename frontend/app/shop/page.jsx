@@ -189,6 +189,11 @@ const ALL_PRODUCTS = [
   }
 ];
 
+const PRODUCTS = ALL_PRODUCTS.map(p => ({
+  ...p,
+  image: p.image ? `/ecommerce-website${p.image}` : p.image
+}));
+
 export default function ShopPage() {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('All');
@@ -213,7 +218,7 @@ export default function ShopPage() {
 
   // Filtering & sorting logic
   const filteredProducts = useMemo(() => {
-    return ALL_PRODUCTS.filter((product) => {
+    return PRODUCTS.filter((product) => {
       const matchesSearch = product.name.toLowerCase().includes(searchQuery.toLowerCase());
       const matchesCategory = selectedCategory === 'All' || product.category === selectedCategory;
       const matchesSize = selectedSize === 'All' || product.sizes.includes(selectedSize);

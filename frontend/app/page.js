@@ -55,7 +55,7 @@ export default function Home() {
       graphicColor: '#D4FF00', 
       rating: 4.9, 
       reviewsCount: 154,
-      image: '/images/11_17386de2-0138-468a-b616-8019451fa26b.webp'
+      image: '/ecommerce-website/images/11_17386de2-0138-468a-b616-8019451fa26b.webp'
     },
     { 
       id: '2', 
@@ -66,7 +66,7 @@ export default function Home() {
       graphicColor: '#E5D3B3', 
       rating: 4.8, 
       reviewsCount: 88,
-      image: '/images/zoom_0-1739428581.avif'
+      image: '/ecommerce-website/images/zoom_0-1739428581.avif'
     },
     { 
       id: '13', 
@@ -77,7 +77,7 @@ export default function Home() {
       graphicColor: '#D4FF00', 
       rating: 4.9, 
       reviewsCount: 210,
-      image: '/images/fsguc_512.webp'
+      image: '/ecommerce-website/images/fsguc_512.webp'
     },
     { 
       id: '6', 
@@ -88,7 +88,7 @@ export default function Home() {
       graphicColor: '#3B82F6', 
       rating: 4.8, 
       reviewsCount: 57,
-      image: '/images/edit-kj-v-7.webp'
+      image: '/ecommerce-website/images/edit-kj-v-7.webp'
     },
   ];
 

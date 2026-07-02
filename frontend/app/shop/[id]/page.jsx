@@ -205,6 +205,11 @@ const ALL_PRODUCTS = [
   }
 ];
 
+const PRODUCTS = ALL_PRODUCTS.map(p => ({
+  ...p,
+  image: p.image ? `/ecommerce-website${p.image}` : p.image
+}));
+
 // Vector SVG shirt renderers
 const ShirtFrontSVG = ({ graphicColor }) => (
   <svg viewBox="0 0 400 450" className="w-full h-full fill-neutral-900 stroke-neutral-800" strokeWidth="2.5">
@@ -242,7 +247,7 @@ export default function ProductDetailPage({ params }) {
   const addToCart = useCartStore((state) => state.addToCart);
 
   // Match URL parameter ID to product array or fallback to first product
-  const product = ALL_PRODUCTS.find(p => p.id === id) || ALL_PRODUCTS[0];
+  const product = PRODUCTS.find(p => p.id === id) || PRODUCTS[0];
 
   const [currentSide, setCurrentSide] = useState('front'); // 'front' | 'back'
   const [selectedSize, setSelectedSize] = useState('M');
