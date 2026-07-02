@@ -4,41 +4,34 @@ This guide explains how to make this E-Commerce Store live. The application cont
 
 ---
 
-## Architecture Overview
+## 🚀 Recommended Approach: Serverless/Static Frontend on GitHub Pages (No Vercel Needed)
 
-```mermaid
-graph TD
-    Client[Next.js Frontend] -->|API Requests| Server[Express Backend]
-    Server -->|Read/Write| Database[(MongoDB Atlas)]
-    Server -->|Upload Images| Cloudinary[Cloudinary CDN]
-```
+Since the frontend is designed with demo-mode fallbacks (including predefined catalogs, cart support, and admin mock controls running in `localStorage`), it can be hosted entirely on **GitHub Pages** for free.
 
-- **Frontend**: Next.js hosted on **Vercel** (recommended, free, and optimized for Next.js).
-- **Backend**: Express.js server hosted on **Render** or **Railway** (free/cheap tier available).
-- **Database**: MongoDB hosted on **MongoDB Atlas** (free tier cluster).
-- **Media Storage**: Cloudinary (optional, for hosting product images).
+### How to Make it Live on GitHub Pages:
+1. Go to your repository on GitHub: [joel9946/ecommerce-website](https://github.com/joel9946/ecommerce-website).
+2. Go to **Settings** -> **Pages** (in the sidebar under the "Code and automation" section).
+3. Under **Build and deployment** -> **Source**, change the dropdown from "Deploy from a branch" to **GitHub Actions**.
+4. Click on the **Actions** tab at the top of your repository. You will see a workflow named `Deploy Next.js to GitHub Pages` running.
+5. Once the build and deployment jobs complete successfully, GitHub will display your live URL on the page.
+6. Your live website link will be:
+   👉 **`https://joel9946.github.io/ecommerce-website/`**
 
 ---
 
-## Step 1: Database Setup (MongoDB Atlas)
+## 🛠️ Full-Stack Approach: Real Database (Express Server + MongoDB)
+
+If you decide in the future that you want a live database and Express server instead of the static demo, follow these steps:
+
+### Step 1: Database Setup (MongoDB Atlas)
 
 1. Go to [MongoDB Atlas](https://www.mongodb.com/cloud/atlas) and sign up for a free account.
-2. Create a **New Cluster** using the **Shared (Free)** tier. Select a cloud provider (e.g., AWS) and region nearest to you.
-3. Once the cluster is created, go to **Database Access** under Security:
-   - Click **Add New Database User**.
-   - Set a username and a strong password (copy the password).
-4. Go to **Network Access** under Security:
-   - Click **Add IP Address**.
-   - Select **Allow Access From Anywhere (0.0.0.0/0)** so your backend hosting service can connect to it.
-5. Go to the **Clusters** dashboard and click **Connect**:
-   - Choose **Connect your application**.
-   - Copy the connection string. It will look like this:
-     `mongodb+srv://<username>:<password>@cluster0.xxxxxx.mongodb.net/?retryWrites=true&w=majority`
-   - Replace `<password>` with the password you created.
+2. Create a **New Cluster** using the **Shared (Free)** tier.
+3. Go to **Database Access**: Click **Add New Database User** and set a username/password.
+4. Go to **Network Access**: Click **Add IP Address** and choose **Allow Access From Anywhere (0.0.0.0/0)**.
+5. Click **Connect** on your cluster -> **Connect your application** -> Copy the connection string. Replace `<password>` with your user's password.
 
----
-
-## Step 2: Backend Deployment (Render)
+### Step 2: Backend Deployment (Render)
 
 Render is a popular platform to host Node.js servers for free.
 
@@ -46,45 +39,23 @@ Render is a popular platform to host Node.js servers for free.
 2. Click **New +** and select **Web Service**.
 3. Connect your GitHub account and select your `ecommerce-website` repository.
 4. Configure the Web Service settings:
-   - **Name**: `ecommerce-backend` (or similar)
    - **Root Directory**: `backend`
    - **Language**: `Node`
    - **Build Command**: `npm install`
    - **Start Command**: `node server.js`
-5. Scroll down to **Environment Variables** (or click **Advanced** -> **Add Environment Variable**) and add the following:
-   - `MONGO_URI`: `mongodb+srv://<username>:<password>@cluster0.xxxxxx.mongodb.net/customprint?retryWrites=true&w=majority` (Replace with your Atlas connection string)
-   - `JWT_SECRET`: `your_random_jwt_secret_string` (Create a long random string)
-   - `PORT`: `5000` (Render binds its own PORT automatically, but setting this is a good practice)
-   - `EMAIL_USER`: `your-email@example.com` (If sending emails)
-   - `EMAIL_PASS`: `your-app-password`
-   - `CLOUDINARY_CLOUD_NAME`: `your-cloudinary-name` (If storing custom print designs)
-   - `CLOUDINARY_API_KEY`: `your-cloudinary-key`
-   - `CLOUDINARY_API_SECRET`: `your-cloudinary-secret`
-6. Click **Create Web Service**. Wait for the build and deployment logs to say "Live".
-7. **Copy your backend service URL** (e.g., `https://ecommerce-backend.onrender.com`).
+5. Under **Environment Variables**, add:
+   - `MONGO_URI`: `mongodb+srv://...` (your MongoDB Atlas connection string)
+   - `JWT_SECRET`: `your_jwt_secret_string` (any random text)
+6. Click **Create Web Service**. Wait until it is "Live", and copy your backend URL (e.g. `https://ecommerce-backend.onrender.com`).
 
----
+### Step 3: Frontend Deployment (Vercel)
 
-## Step 3: Frontend Deployment (Vercel)
+If you transition from GitHub Pages to Vercel for full-stack API integration:
 
-Vercel is the creator of Next.js and provides the fastest, most reliable hosting for it.
-
-1. Log in to [Vercel](https://vercel.com/) (select log in with GitHub for automatic repository access).
-2. Click **Add New...** and select **Project**.
-3. Import your `ecommerce-website` repository from the list.
-4. Configure the Project settings:
-   - **Framework Preset**: `Next.js`
-   - **Root Directory**: Click Edit, select the `frontend` folder, and click Continue.
-5. Open the **Environment Variables** section and add the following:
+1. Log in to [Vercel](https://vercel.com/) with GitHub.
+2. Import the `ecommerce-website` repository.
+3. Set the **Root Directory** to `frontend`.
+4. Open the **Environment Variables** section and add:
    - Key: `NEXT_PUBLIC_API_URL`
-   - Value: `https://your-backend.onrender.com/api` (Replace with your Render backend URL, appending `/api` at the end)
-6. Click **Deploy**.
-7. Once deployed, Vercel will give you a live production URL (e.g., `https://ecommerce-website.vercel.app`).
-
----
-
-## Step 4: Final Verification
-
-1. Visit your live Vercel URL.
-2. Test registering/logging in, viewing products, and attempting custom order options.
-3. Check the developer console if API requests are failing. Ensure the `NEXT_PUBLIC_API_URL` environment variable matches your hosted backend service URL perfectly and has `/api` at the end.
+   - Value: `https://your-backend.onrender.com/api` (your hosted Render backend URL with `/api` at the end)
+5. Click **Deploy**.
